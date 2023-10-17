@@ -10,12 +10,14 @@ source:
 
 build:
   number: 0
-  skip: true  # [osx or win]
+  noarch: generic
 
 requirements:
   run:
     - cuda-runtime {{ version }}
     - cuda-toolkit {{ version }}
+  run_constrained:
+    - __osx <0a0
 
 test:
   commands:
