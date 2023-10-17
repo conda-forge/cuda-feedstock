@@ -190,6 +190,3 @@ Feedstock Maintainers
 * [@robertmaynard](https://github.com/robertmaynard/)
 * [@vyasr](https://github.com/vyasr/)
 
-
-<!-- dummy commit to enable rerendering -->
-
