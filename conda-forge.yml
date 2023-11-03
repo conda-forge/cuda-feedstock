@@ -4,5 +4,8 @@ conda_forge_output_validation: true
 github:
   branch_name: main
   tooling_branch_name: main
+noarch_platforms:
+  - linux_64
+  - win_64
 provider:
   linux_aarch64: default
