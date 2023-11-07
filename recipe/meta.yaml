@@ -10,10 +10,12 @@ source:
 
 build:
   number: 0
-  skip: true  # [osx or win]
+  noarch: generic
 
 requirements:
   run:
+    - __linux  # [linux]
+    - __win    # [win]
     - cuda-runtime {{ version }}
     - cuda-toolkit {{ version }}
 
