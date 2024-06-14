@@ -8,25 +8,27 @@ To run CUDA code, you must have an NVIDIA GPU on your machine and you must insta
 Note that CUDA drivers _cannot_ be installed with conda and must be installed on your system using an appropriate installation method.
 See the [CUDA documentation](https://docs.nvidia.com/cuda/) for instructions on how to install ([Linux](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html), [Windows](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html)). 
 
+Note that the CUDA packages are designed to be installable in a *CPU-only* environment (i.e. no CUDA driver or GPU installed), see the FAQ at the end of this page.
+
 ## Installing CUDA
 
 ### Basic Installation
 
-The easiest one-step solution to install the full CUDA Toolkit is to install the [cuda metapackage](https://github.com/conda-forge/cuda-feedstock/) with this command:
+The easiest one-step solution to install the full CUDA Toolkit is to install the [`cuda` metapackage](https://github.com/conda-forge/cuda-feedstock/) with this command:
 
 ```
-conda install -c conda-forge cuda cuda-version=12.4
+conda install -c conda-forge cuda cuda-version=12.5
 ```
 
 Let's break down this command.
 We are requesting the installation of two metapackages here, `cuda` and `cuda-version`.
-The `cuda` metapackage pulls in all the components of the CUDA Toolkit (CTK) and is roughly equivalent to installing the CUDA Toolkit with traditional OS package managers like apt or yum on Linux.
+The `cuda` metapackage pulls in all the components of the CUDA Toolkit (CTK) and is roughly equivalent to installing the CUDA Toolkit with traditional system package managers like `apt` or `yum` on Linux.
 Similarly to such package managers, the separate components may also be installed independently.
 The [`cuda-version` metapackage](https://github.com/conda-forge/cuda-version-feedstock/blob/main/recipe/README.md) is used to select the version of CUDA to install.
 This metapackage is important because individual components of the CTK are typically versioned independently (the current versions may be found in the [release notes](https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html).
 The `cuda-version` metapackage provides a standard way to install the version of a specific CUDA component corresponding to a given version of the CTK.
 This way, you never have to specify a particular version of any package; you just specify the `cuda-version` that you want, then list packages you want installed and conda will take care of finding the right versions for you.
-The above command will install all components of CUDA from the latest patch release of CUDA 12.4.
+The above command will install all components of CUDA from the latest minor release of CUDA 12.5.
 
 _Warning: there are contents of OS CUDA Toolkit installs that are not available in the conda-forge packages, including_:
 - Driver libraries, such as (but not limited to)
@@ -36,19 +38,19 @@ _Warning: there are contents of OS CUDA Toolkit installs that are not available 
     - Documentation
     - Samples (use to be)
     - Demo suite (limited subset of samples)
-- GDS
+- GPUDirect Storage (GDS)
     - Missing file system components
 - fabricmanager
 - `libnvidia_nscq`
-- Imex
-- Nsight-systems
+- IMEX
+- Nsight Systems
 
-### Installing Subsets of the CTK
+### Installing Subsets of the CUDA Toolkit
 
 Rather than installing all of CUDA at once, users may instead install just the packages that they need. 
-For example, to install just libcublas or libcusparse one may run:
+For example, to install just `libcublas` and `libcusparse` one may run:
 ```
-conda install -c conda-forge libcublas cuda-version=<CUDA version>
+conda install -c conda-forge libcublas libcusparse cuda-version=<CUDA version>
 ```
 The best way to get a current listing is to run
 ```
@@ -89,7 +91,7 @@ Therefore, in a CUDA 11 world the conda-forge and nvidia channels were difficult
 
 ### CUDA 12.0-12.4
 
-With the CUDA 12 release, NVIDIA contributed the new packaging structure to conda-forge, introducing the same set of packages that existed on the nvidia channel as a replacement for the old `cudatoolkit` package on conda-forge.This was done starting with CUDA 12.0 to indicate the breaking nature of these changes compared to the prior CUDA 11.x packaging in conda-forge.
+With the CUDA 12 release, NVIDIA contributed the new packaging structure to conda-forge, introducing the same set of packages that existed on the nvidia channel as a replacement for the old `cudatoolkit` package on conda-forge. This was done starting with CUDA 12.0 to indicate the breaking nature of these changes compared to the prior CUDA 11.x packaging in conda-forge.
 These packages became the standard mechanism for delivering CUDA conda packages.
 Due to the scale of the reorganization, the CUDA 12.0, 12.1, and 12.2 releases also involved numerous additional fixes to the packaging structure to better integrate them in the Conda ecosystem.
 Due to the number of such changes that were required and the focus on improving the quality of these installations, during this time period no corresponding updates were provided for packages on the nvidia channel.
@@ -102,20 +104,22 @@ With CUDA 12.5, the nvidia channel was fully aligned with conda-forge.
 Packages on both channels are identical, ensuring safe coexistence of the two channels within the same conda environment.
 
 Going forward, the packages on the two channels should be expected to remain compatible.
-However, due to its smaller ecosystem footprint the nvidia channel may be a bit more nimble 
 
 ## FAQ
 
 ### What if I see an error saying `__cuda` is too old?
 
-You will need to update your driver
+The `__cuda` virtual package is used by `conda` to represent the maximum CUDA version fully supported by the display driver. See the [conda docs on virtual packages](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-virtual.html) for more information.
+
+To update the `__cuda` virtual package, you must install a newer driver:
 - [Linux instructions](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#driver-installation)
 - [Windows instructions](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html#installing-cuda-development-tools)
 
-If conda has incorrectly identified the CUDA driver, you can override by setting the `CONDA_OVERRIDE_CUDA` environment variable.
+If conda has incorrectly identified the CUDA driver, you can override by setting the `CONDA_OVERRIDE_CUDA` environment variable to a version number like `"12.5"` or `""` to indicate that no CUDA driver is detected.
 
 ### Can I install CUDA conda packages in a CPU-only environment (such as free-tier CIs)?
 
 Yes! All of the CUDA packages can be installed in an environment without the presence of a physical GPU or CUDA driver.
 The inter-package dependency is established properly so that this use case is covered.
 If you want to test package installation assuming a certain driver version is installed, use the `CONDA_OVERRIDE_CUDA` environment variable mentioned above.
+Even if the package requires CUDA to run, this allows the packaging and dependency resolution to be tested in a CPU-only environment.

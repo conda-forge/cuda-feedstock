@@ -10,9 +10,9 @@ There are a few other important points that users compiling CUDA code in conda e
 
 If you plan to install and build against CUDA packages, you will need to be aware of how libraries are split into packages.
 Packages containing libraries (as opposed to compilers or header-only components) follow specific naming conventions.
-Typically library components of the CTK are split into three pieces: the base package, a `*-dev` package, and a `*-static` package.
+Typically library components of the CUDA Toolkit (CTK) are split into three pieces: the base package, a `*-dev` package, and a `*-static` package.
 Using [the cuBLAS library](https://github.com/conda-forge/libcublas-feedstock) as an example, we have three different packages:
-The base `libcublas` package, which installs the libcublas.so library and is sufficient for use if you are simply installing other packages that require cuBLAS at runtime.
+The base `libcublas` package, which installs the `libcublas.so` library and is sufficient for use if you are simply installing other packages that require cuBLAS at runtime.
 The `libcublas-dev` package, which installs additional files like cuBLAS headers and CMake files.
 This package should be installed if you wish to compile your own code against cuBlas within a conda environment.
 The `libcublas-static` package, which installs the static cuBLAS library.
