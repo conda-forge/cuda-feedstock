@@ -1,7 +1,7 @@
 # Guide for Maintainers of Recipes That Use CUDA
 
 This guide is intended for maintainers of other recipes that depend on CUDA.
-It assumes familiarity with the user guides for both [running CUDA code](./end_user_run_guide.md) and [compiling CUDA code](./end_user_compile_guide.md) with conda-forge packages.
+It assumes familiarity with the user guides for both [running CUDA code](./end_user_run_guide.md) and [compiling CUDA code](./end_user_compile_guide.md) with `conda-forge` packages.
 
 ## Best Practices
 
@@ -52,7 +52,7 @@ For packages that need to support both CUDA major versions 11 & 12, you will nee
 ## Cross-compilation
 
 The CUDA recipes are designed to support cross-compilation.
-As such, a number of CUDA components on conda-forge are split into `noarch: generic` component packages that are named according to the supported architecture, rather than being architecture-specific packages.
+As such, a number of CUDA components on `conda-forge` are split into `noarch: generic` component packages that are named according to the supported architecture, rather than being architecture-specific packages.
 The canonical example is [the cuda-nvcc package](https://github.com/conda-forge/cuda-nvcc-feedstock/blob/main/recipe/meta.yaml) that contains the CUDA `nvcc` compiler.
 This package is split into the `cuda-nvcc` package – which is architecture specific and must be installed on the appropriate target platform (e.g.
 x86-64 Linux) – and the `cuda-nvcc_${TARGET_PLATFORM}` packages – each of which is architecture-independent and may be installed on any target, but are only suitable for use in compiling code for the specified target platform.
@@ -63,7 +63,7 @@ This approach allows using host machines with a single platform to compile code 
 
 ### Linux
 
-The conda-forge CUDA packages aim to satisfy two sets of constraints.
+The `conda-forge` CUDA packages aim to satisfy two sets of constraints.
 On one hand, the packages aim to retain as similar a structure as possible to the CUDA packages that may be installed via system package manager (e.g. `apt` and `yum`) while supporting cross-compilation.
 On the other hand, the packages aim to provide a seamless experience at both build time and run time within conda environments.
 To satisfy the first requirement, all files in CUDA conda packages are installed into the `$PREFIX/targets` directory.
@@ -74,10 +74,3 @@ Specifically, we apply the following conventions:
 - Shared libraries are symlinked into `$PREFIX/lib`. This includes the bare name (`libcublas.so`), the SONAME, and the full name.
 - Pkgconfig files are installed directly into `$PREFIX/lib/pkgconfig`. These are not symlinked from `$PREFIX/targets`, but are directly moved to this location. The reason is that pkgconfig files contain relative paths to libraries/headers/etc and the paths cannot be accurate relative to both the `targets` directory and the `lib/pkgconfig` directory. Since the latter is what `pkgconfig` will use, we choose to install the files into `lib/pkgconfig` and reroot the paths accordingly.
 - Static libraries and header files are not symlinked into the sysroot directories. Instead, conda installations of `nvcc` know how to search for these packages in the correct directories.
-
-### Windows
-
-Package structure on Windows.
-Doesn’t have `x64` directory.
-
-Library structure, on Windows this would be `%LIBRARY_LIB%` for `.lib` files used during the build `%LIBRARY_BIN%` and `.dll` files used at build time and run time
