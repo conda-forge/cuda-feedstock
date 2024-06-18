@@ -25,9 +25,9 @@ As an example, consider that you have built a package that requires `libcublas`:
 ```yaml
 requirements:
   build:
-    - compiler('cuda')
+    - {{ compiler('cuda') }}
   host:
-    - libcublas
+    - libcublas-dev
     - cuda-version=12.4
 ```
 
@@ -42,8 +42,8 @@ build:
 
 requirements:
   run:
-    # Since we’ve ignored the run export, pin manually, but set the min to just "x" since we support any libcublas within the same major release, including older versions
-    - pin_compatible("libcublas", min_pin="x", max_pin="x")
+    # Since we've ignored the run export, we pin manually, but set the min to "x" since we support any libcublas within the same major release, including older versions
+    - {{ pin_compatible("libcublas", min_pin="x", max_pin="x") }}
 ```
 
 For packages that need to support both CUDA major versions 11 & 12, you will need to use selectors and/or Jinja tricks to separate out the requirements for CUDA 11 and CUDA 12. [cupy-feedstock](https://github.com/conda-forge/cupy-feedstock) offers a good example.
@@ -54,8 +54,8 @@ For packages that need to support both CUDA major versions 11 & 12, you will nee
 The CUDA recipes are designed to support cross-compilation.
 As such, a number of CUDA components on `conda-forge` are split into `noarch: generic` component packages that are named according to the supported architecture, rather than being architecture-specific packages.
 The canonical example is [the cuda-nvcc package](https://github.com/conda-forge/cuda-nvcc-feedstock/blob/main/recipe/meta.yaml) that contains the CUDA `nvcc` compiler.
-This package is split into the `cuda-nvcc` package – which is architecture specific and must be installed on the appropriate target platform (e.g.
-x86-64 Linux) – and the `cuda-nvcc_${TARGET_PLATFORM}` packages – each of which is architecture-independent and may be installed on any target, but are only suitable for use in compiling code for the specified target platform.
+This package is split into the `cuda-nvcc` package -- which is architecture specific and must be installed on the appropriate target platform (e.g.
+x86-64 Linux) -- and the `cuda-nvcc_${TARGET_PLATFORM}` packages -- each of which is architecture-independent and may be installed on any target, but are only suitable for use in compiling code for the specified target platform.
 This approach allows using host machines with a single platform to compile code for multiple platforms.
 
 

@@ -51,11 +51,11 @@ For example, to install just `libcublas` and `libcusparse` one may run:
 ```
 conda install -c conda-forge libcublas libcusparse cuda-version=<CUDA version>
 ```
-The best way to get a current listing is to run
+The best way to get a current listing is to run:
 ```
 conda install --dry-run -c conda-forge cuda cuda-version=<CUDA version>
 ```
-For a complete listing of the packages that were originally created, see [this issue](https://github.com/conda-forge/staged-recipes/issues/21382) 
+For a complete listing of the packages that were originally created, see [this issue](https://github.com/conda-forge/staged-recipes/issues/21382).
 
 ### Metapackages
 
@@ -63,9 +63,9 @@ Existing conda documentation: https://docs.nvidia.com/cuda/cuda-installation-gui
 
 For convenience, a number of additional metapackages are available:
 - `cuda-runtime`: All CUDA runtime libraries needed to run a CUDA application
-- `cuda-libraries`: All libraries required to run a CUDA application requiring libraries beyond the CUDA runtime (such as the CUDA math libraries) as well as packages needed to perform JIT compilation.
+- `cuda-libraries`: All libraries required to run a CUDA application requiring libraries beyond the CUDA runtime (such as the CUDA math libraries) as well as packages needed to perform JIT compilation
 - `cuda-visual-tools`: GUIs for visualizing and profiling such as Nsight Compute
-- `cuda-command-line-tools`: Command line tools for analyzing and profiling such as cupti, cuda-gdb, and Compute Sanitizer.
+- `cuda-command-line-tools`: Command line tools for analyzing and profiling such as cupti, cuda-gdb, and Compute Sanitizer
 - `cuda-tools`: All tools for analyzing and profiling, both GUI (includes cuda-visual-tools) and CLI (includes cuda-command-line-tools)
 
 ### CUDA C++ Core Libraries (CCCL)
@@ -103,7 +103,7 @@ As a result, `nvidia` and `conda-forge` CUDA packages remained incompatible from
 With CUDA 12.5, the `nvidia` channel was fully aligned with `conda-forge`.
 Packages on both channels are identical, ensuring safe coexistence of the two channels within the same conda environment.
 
-Going forward, the packages on the two channels should be expected to remain compatible.
+Going forward, CUDA packages on the `conda-forge` and `nvidia` channels should be expected to remain compatible.
 
 ## FAQ
 
