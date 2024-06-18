@@ -12,11 +12,11 @@ If you plan to install and build against CUDA packages, you will need to be awar
 Packages containing libraries (as opposed to compilers or header-only components) follow specific naming conventions.
 Typically library components of the CUDA Toolkit (CTK) are split into three pieces: the base package, a `*-dev` package, and a `*-static` package.
 Using [the cuBLAS library](https://github.com/conda-forge/libcublas-feedstock) as an example, we have three different packages:
-The base `libcublas` package, which installs the `libcublas.so` library and is sufficient for use if you are simply installing other packages that require cuBLAS at runtime.
-The `libcublas-dev` package, which installs additional files like cuBLAS headers and CMake files.
-This package should be installed if you wish to compile your own code against cuBlas within a conda environment.
-The `libcublas-static` package, which installs the static cuBLAS library.
-This library should be installed if you wish to compile your own code against a static cuBLAS within a conda environment.
+The base `libcublas` package, which installs the `libcublas.so.X` symlink and the `libcublas.so.X.Y` shared library, is sufficient for use if you are simply installing other packages that require cuBLAS at runtime.
+The `libcublas-dev` package installs additional files like cuBLAS headers, the `libcublas.so` symlink, and CMake files.
+This package should be installed if you wish to compile your own code dynamically linking against cuBLAS within a conda environment.
+The `libcublas-static` package installs the static `libcublas_static.a` library.
+This library should be installed if you wish to compile your own code linking against a static cuBLAS within a conda environment.
 Typically the `*-static` packages will require the `*-dev` packages to be installed in order to provide the necessary packaging (CMake, pkg-config) files to discover the library, but this is not currently enforced by the packages themselves.
 
 ## Development Metapackages
@@ -24,4 +24,4 @@ Typically the `*-static` packages will require the `*-dev` packages to be instal
 The above discussion of naming also applies to metapackages.
 For instance, the `cuda-libraries` package contains all the runtime libraries, while `cuda-libraries-dev` also includes dependencies on the corresponding `*-dev` packages.
 In addition, for the purposes of development there are a few additional key metapackages:
-- `cuda-compiler`: All packages required to compile a minimal CUDA program (one that does not require e.g. extra math libraries like cuBLAS or cuSparse).
+- `cuda-compiler`: All packages required to compile a minimal CUDA program (one that does not require e.g. extra math libraries like cuBLAS or cuSPARSE).
