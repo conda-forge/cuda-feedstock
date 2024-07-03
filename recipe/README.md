@@ -11,7 +11,8 @@ More information for different classes of users is documented in the documents b
 
 ## Versioning
 
-On conda-forge, the version of installed CUDA packages can be controlled by
+On the conda-forge channel (and the nvidia channel since CUDA 12.5+), the
+version of installed CUDA packages can be controlled by
 the meta package `cuda-version`. See the detailed documentation [here](https://github.com/conda-forge/cuda-version-feedstock/blob/main/recipe/README.md).
 
 ### CUDA Metapackage Versioning
