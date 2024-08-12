@@ -36,7 +36,6 @@ about:
 
 extra:
   recipe-maintainers:
-    - sisodia1701
     - adibbley
     - billysuh7
     - bdice
@@ -44,4 +43,5 @@ extra:
     - kmittman
     - leofang
     - robertmaynard
+    - sisodia1701
     - vyasr
