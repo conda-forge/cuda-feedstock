@@ -156,5 +156,6 @@ Feedstock Maintainers
 * [@kmittman](https://github.com/kmittman/)
 * [@leofang](https://github.com/leofang/)
 * [@robertmaynard](https://github.com/robertmaynard/)
+* [@sisodia1701](https://github.com/sisodia1701/)
 * [@vyasr](https://github.com/vyasr/)
 
