@@ -35,7 +35,7 @@ Because of run-exports in the `cuda-cudart-dev` package, your library will have 
 To make this compatible with all CUDA 12 minor versions 12.0+, you must add the following:
 ```yaml
 build:
-  # Ignore run exports in your build section
+  # Ignore run exports from your build and host sections
   ignore_run_exports_from:
     - {{ compiler('cuda') }}
     - cuda-cudart-dev
