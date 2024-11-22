@@ -19,7 +19,7 @@ If your library is properly configured as such, you will need to do a bit of ext
 - You must [ignore the `run_exports`](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#export-runtime-requirements) of any CUDA packages that your package depends on. Otherwise, the `run_exports` would require the runtime libraries to have versions equal to or greater than the versions used to build the package.
 - You must add explicit runtime dependencies (or `run_constrained` for soft/optional dependencies) that specify the desired version range for the dependencies whose `run_exports` have been ignored.
 
-As an example, consider that you have built a package that requires `cuda-cudart`:
+As an example, consider that you have built a package that requires `libcublas`:
 
 
 ```yaml
@@ -27,35 +27,35 @@ requirements:
   build:
     - {{ compiler('cuda') }}
   host:
-    - cuda-cudart-dev
+    - libcublas-dev
     - cuda-version={{ cuda_compiler_version }}
 ```
 
-Because of run-exports in the `cuda-cudart-dev` package, your library will have a `run` requirement on `cuda-cudart` corresponding to `{{ cuda_compiler_version }}` or newer.
+Because of run-exports in the `libcublas-dev` package, your library will have a `run` requirement on `libcublas` corresponding to `{{ cuda_compiler_version }}` or newer.
 To make this compatible with all CUDA minor versions from the same CUDA major version family, you must add the following:
 ```yaml
 build:
   # Ignore run exports from your build and host sections
   ignore_run_exports_from:
     - {{ compiler('cuda') }}
-    - cuda-cudart-dev
+    - libcublas-dev
 
 requirements:
   build:
     - {{ compiler('cuda') }}
   host:
-    - cuda-cudart-dev
+    - libcublas-dev
     - cuda-version={{ cuda_compiler_version }}
   run:
-    # Since we've ignored the run export from cuda-cudart-dev, we pin
-    # cuda-cudart manually. Having a pin_compatible on cuda-version with
-    # max_pin='x' and min_pin='x' will constrain cuda-cudart to the same
+    # Since we've ignored the run export from libcublas-dev, we pin
+    # libcublas manually. Having a pin_compatible on cuda-version with
+    # max_pin='x' and min_pin='x' will constrain libcublas to the same
     # major version as what we pinned in host.
     - {{ pin_compatible('cuda-version', max_pin='x', min_pin='x') }}
-    - cuda-cudart
+    - libcublas
 ```
 
-This strategy applies to many other CUDA libraries as well, such as `libcublas-dev` / `libcublas`.
+This strategy applies to many other CUDA libraries as well.
 
 For packages that need to support CUDA major versions earlier than CUDA 12, you will need to use selectors and/or Jinja tricks to separate out the requirements. [cupy-feedstock](https://github.com/conda-forge/cupy-feedstock) offers a good example.
 
