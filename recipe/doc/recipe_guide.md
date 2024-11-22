@@ -28,11 +28,11 @@ requirements:
     - {{ compiler('cuda') }}
   host:
     - cuda-cudart-dev
-    - cuda-version=12.4
+    - cuda-version={{ cuda_compiler_version }}
 ```
 
-Because of run-exports in the `cuda-cudart-dev` package, your library will have a `run` requirement on `cuda-cudart` corresponding to CUDA 12.4 or newer.
-To make this compatible with all CUDA 12 minor versions 12.0+, you must add the following:
+Because of run-exports in the `cuda-cudart-dev` package, your library will have a `run` requirement on `cuda-cudart` corresponding to `{{ cuda_compiler_version }}` or newer.
+To make this compatible with all CUDA minor versions from the same CUDA major version family, you must add the following:
 ```yaml
 build:
   # Ignore run exports from your build and host sections
@@ -45,7 +45,7 @@ requirements:
     - {{ compiler('cuda') }}
   host:
     - cuda-cudart-dev
-    - cuda-version=12.4
+    - cuda-version={{ cuda_compiler_version }}
   run:
     # Since we've ignored the run export from cuda-cudart-dev, we pin
     # cuda-cudart manually. Having a pin_compatible on cuda-version with
@@ -57,7 +57,7 @@ requirements:
 
 This strategy applies to many other CUDA libraries as well, such as `libcublas-dev` / `libcublas`.
 
-For packages that need to support both CUDA major versions 11 & 12, you will need to use selectors and/or Jinja tricks to separate out the requirements for CUDA 11 and CUDA 12. [cupy-feedstock](https://github.com/conda-forge/cupy-feedstock) offers a good example.
+For packages that need to support CUDA major versions earlier than CUDA 12, you will need to use selectors and/or Jinja tricks to separate out the requirements. [cupy-feedstock](https://github.com/conda-forge/cupy-feedstock) offers a good example.
 
 
 ## Cross-compilation
