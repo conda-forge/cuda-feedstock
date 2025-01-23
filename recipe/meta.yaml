@@ -1,4 +1,4 @@
-{% set version = "12.6.3" %}
+{% set version = "12.8.0" %}
 
 package:
   name: cuda
