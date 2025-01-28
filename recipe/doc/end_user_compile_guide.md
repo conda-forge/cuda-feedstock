@@ -25,3 +25,37 @@ The above discussion of naming also applies to metapackages.
 For instance, the `cuda-libraries` package contains all the runtime libraries, while `cuda-libraries-dev` also includes dependencies on the corresponding `*-dev` packages.
 In addition, for the purposes of development there are a few additional key metapackages:
 - `cuda-compiler`: All packages required to compile a minimal CUDA program (one that does not require e.g. extra math libraries like cuBLAS or cuSPARSE).
+
+## Building for ARM Tegra devices
+
+The [arm-variant](https://github.com/conda-forge/arm-variant-feedstock) package allows
+end-users to select which *runtime* variant of ARM packages are installed into their
+environment. However, since there are no Tegra hosts available for compiling conda-package,
+these packages must be cross-compiled from x86 or SBSA ARM. A second package,
+`cuda-nvcc-arm-variant-target` is used to indicate which arm variant should be targeted at
+*compile* time. For example, recipes that wish to build for both SBSA ARM and Tegra ARM
+devices should have something like the following in their recipe:
+
+```yaml
+requirements:
+    build:
+        - {{ compiler('cuda') }}
+        - cuda-nvcc-arm-variant-target * {{ arm_variant_type }}
+    host:
+        - arm-variant * {{ arm_variant_type }}
+```
+
+where `the conda_build_config.yaml` contains something like:
+
+```yaml
+arm_variant_target:  # [linux and aarch64]
+    - sbsa  # [linux and aarch64]
+    - tegra  # [linux and aarch64]
+```
+
+The compute capabilities for GPUs on Tegra and non-Tegra devices are mutually exclusive, and
+code compiled for Tegra and non-Tegra devices are not interchangeable, so one build cannot
+service all ARM variants. For developer convenience, the CUDA compiler package activation
+script automatically sets the environment variables `CUDAARCHS` and `TORCH_CUDA_ARCH_LIST`
+to all supported CUDA architectures for the target platform. These environment variables are
+consumed by CMake and Pytorch respectively.

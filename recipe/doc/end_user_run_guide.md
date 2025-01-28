@@ -6,7 +6,7 @@ This guide is for people who wish to use conda environments to run CUDA code.
 
 To run CUDA code, you must have an NVIDIA GPU on your machine and you must install the CUDA drivers.
 Note that CUDA drivers _cannot_ be installed with conda and must be installed on your system using an appropriate installation method.
-See the [CUDA documentation](https://docs.nvidia.com/cuda/) for instructions on how to install ([Linux](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html), [Windows](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html)). 
+See the [CUDA documentation](https://docs.nvidia.com/cuda/) for instructions on how to install ([Linux](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html), [Windows](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html)).
 
 Note that the CUDA packages are designed to be installable in a *CPU-only* environment (i.e. no CUDA driver or GPU installed), see the FAQ at the end of this page.
 
@@ -44,9 +44,15 @@ _Warning: there are contents of OS CUDA Toolkit installs that are not available 
 - IMEX
 - Nsight Systems
 
+### Selecting ARM Variant
+
+Many of NVIDIA's CUDA package are built for both SBSA and Tegra devices. SBSA is the default
+ARM variant. To install packages built for Tegra, add the `arm-variant=*=tegra` package to
+your environment.
+
 ### Installing Subsets of the CUDA Toolkit
 
-Rather than installing all of CUDA at once, users may instead install just the packages that they need. 
+Rather than installing all of CUDA at once, users may instead install just the packages that they need.
 For example, to install just `libcublas` and `libcusparse` one may run:
 ```
 conda install -c conda-forge libcublas libcusparse cuda-version=<CUDA version>
