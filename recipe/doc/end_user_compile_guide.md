@@ -29,28 +29,35 @@ In addition, for the purposes of development there are a few additional key meta
 ## Building for ARM Tegra devices
 
 The [arm-variant](https://github.com/conda-forge/arm-variant-feedstock) package allows
-end-users to select which *runtime* variant of ARM packages are installed into their
-environment. However, since there are no Tegra hosts available for compiling conda-package,
-these packages must be cross-compiled from x86 or SBSA ARM. A second package,
-`cuda-nvcc-arm-variant-target` is used to indicate which arm variant should be targeted at
-*compile* time. For example, recipes that wish to build for both SBSA ARM and Tegra ARM
-devices should have something like the following in their recipe:
+end-users to select which variant of ARM packages are installed into their environment.
+However, since there are no Tegra devices available for compilation, these packages must be
+cross-compiled from x86. Recipes that wish to build for both SBSA ARM and Tegra ARM devices
+should have something like the following in their recipe:
 
 ```yaml
 requirements:
     build:
         - {{ compiler('cuda') }}
-        - cuda-nvcc-arm-variant-target * {{ arm_variant_type }}
+        - arm-variant * {{ arm_variant_type }}
     host:
         - arm-variant * {{ arm_variant_type }}
 ```
 
-where `the conda_build_config.yaml` contains something like:
+where the `recipe/conda_build_config.yaml` contains something like:
 
 ```yaml
-arm_variant_target:  # [linux and aarch64]
-    - sbsa  # [linux and aarch64]
-    - tegra  # [linux and aarch64]
+arm_variant_type:  # [linux and aarch64]
+  - sbsa           # [linux and aarch64]
+  - tegra          # [linux and aarch64]
+```
+
+where the `conda-forge.yml` contains something like:
+
+```yaml
+build_platform:
+  linux_aarch64: linux_64
+provider:
+  linux_aarch64: default
 ```
 
 The compute capabilities for GPUs on Tegra and non-Tegra devices are mutually exclusive, and
