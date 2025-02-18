@@ -112,7 +112,7 @@ device-code compiled for Tegra and non-Tegra devices are not interchangeable, so
 cannot service all ARM variants. For developer convenience, the CUDA compiler package
 activation script automatically sets the environment variables `CUDAARCHS` and
 `TORCH_CUDA_ARCH_LIST` to all supported CUDA architectures for the target platform. These
-environment variables are consumed by CMake and Pytorch respectively.
+environment variables are consumed by CMake and PyTorch respectively.
 
 ## Directory structure
 
