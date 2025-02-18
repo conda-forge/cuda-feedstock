@@ -71,6 +71,46 @@ This package is split into the `cuda-nvcc` package -- which is architecture spec
 x86-64 Linux) -- and the `cuda-nvcc_${TARGET_PLATFORM}` packages -- each of which is architecture-independent and may be installed on any target, but are only suitable for use in compiling code for the specified target platform.
 This approach allows using host machines with a single platform to compile code for multiple platforms.
 
+## Building for ARM Tegra devices
+
+The [arm-variant](https://github.com/conda-forge/arm-variant-feedstock) package allows
+end-users to select which variant of ARM packages are installed into their environment.
+However, since there are no Tegra devices available for compilation, these packages must be
+cross-compiled from x86. Recipes that wish to build for both SBSA ARM and Tegra ARM devices
+should have something like the following in their recipe:
+
+```yaml
+requirements:
+  build:
+    - {{ compiler('cuda') }}
+    - arm-variant * {{ arm_variant_type }}
+  host:
+    - arm-variant * {{ arm_variant_type }}
+```
+
+where the `recipe/conda_build_config.yaml` contains something like:
+
+```yaml
+arm_variant_type:  # [linux and aarch64]
+  - sbsa           # [linux and aarch64]
+  - tegra          # [linux and aarch64]
+```
+
+where the `conda-forge.yml` contains something like:
+
+```yaml
+build_platform:
+  linux_aarch64: linux_64
+provider:
+  linux_aarch64: default
+```
+
+The compute capabilities for GPUs on Tegra and non-Tegra devices are mutually exclusive, and
+device-code compiled for Tegra and non-Tegra devices are not interchangeable, so one build
+cannot service all ARM variants. For developer convenience, the CUDA compiler package
+activation script automatically sets the environment variables `CUDAARCHS` and
+`TORCH_CUDA_ARCH_LIST` to all supported CUDA architectures for the target platform. These
+environment variables are consumed by CMake and Pytorch respectively.
 
 ## Directory structure
 
