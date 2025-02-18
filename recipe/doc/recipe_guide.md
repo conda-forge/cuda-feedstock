@@ -35,9 +35,11 @@ Because of run-exports in the `libcublas-dev` package, your library will have a 
 To make this compatible with all CUDA minor versions from the same CUDA major version family, you must add the following:
 ```yaml
 build:
-  # Ignore run exports from your build and host sections
+  # Ignore cuda-version directly. Do not ignore from {{ compiler('cuda') }} because this package also exports the arm-variant package
+  ignore_run_exports:
+    - cuda-version
+  # Ignore run exports from your host section
   ignore_run_exports_from:
-    - {{ compiler('cuda') }}
     - libcublas-dev
 
 requirements:
