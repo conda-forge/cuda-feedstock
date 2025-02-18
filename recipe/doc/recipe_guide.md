@@ -16,7 +16,8 @@ Of particular interest from a conda packaging perspective is the binary backward
 This guide assumes that you already know how to write and compile code that supports such behavior.
 If your library is properly configured as such, you will need to do a bit of extra work to ensure that your conda package supports this as well:
 
-- You must [ignore the `run_exports`](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#export-runtime-requirements) of any CUDA packages that your package depends on. Otherwise, the `run_exports` would require the runtime libraries to have versions equal to or greater than the versions used to build the package.
+- You must [ignore_run_exports_from`](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#export-runtime-requirements) of any CUDA library packages that your package depends on. Otherwise, the `run_exports` would require the runtime libraries to have versions equal to or greater than the versions used to build the package.
+- You must `ignore_run_exports` of the `cuda-version` package.
 - You must add explicit runtime dependencies (or `run_constrained` for soft/optional dependencies) that specify the desired version range for the dependencies whose `run_exports` have been ignored.
 
 As an example, consider that you have built a package that requires `libcublas`:
@@ -35,12 +36,13 @@ Because of run-exports in the `libcublas-dev` package, your library will have a 
 To make this compatible with all CUDA minor versions from the same CUDA major version family, you must add the following:
 ```yaml
 build:
-  # Ignore cuda-version directly. Do not ignore from {{ compiler('cuda') }} because this package also exports the arm-variant package
-  ignore_run_exports:
-    - cuda-version
-  # Ignore run exports from your host section
+  # Ignore run exports from CUDA libraries in the host section
   ignore_run_exports_from:
     - libcublas-dev
+  # Ignore cuda-version directly. Do not ignore from {{ compiler('cuda') }}
+  # because this package has other exports
+  ignore_run_exports:
+    - cuda-version
 
 requirements:
   build:
