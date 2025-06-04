@@ -75,6 +75,9 @@ This approach allows using host machines with a single platform to compile code 
 
 ## Building for ARM Tegra devices
 
+> [!IMPORTANT]
+> Support for Tegra builds on conda-forge is only available for CUDA 12.9 and later.
+
 The [arm-variant](https://github.com/conda-forge/arm-variant-feedstock) package allows
 end-users to select which variant of ARM packages are installed into their environment.
 However, since there are no Tegra devices available for compilation, these packages must be
@@ -89,6 +92,10 @@ requirements:
   host:
     - arm-variant * {{ arm_variant_type }}
 ```
+
+> [!NOTE]
+> The `arm-variant` package will cause overlinking warnings for itself from `conda-build`.
+> This is expected and may be safely ignored.
 
 where the `recipe/conda_build_config.yaml` contains something like:
 
@@ -110,9 +117,9 @@ provider:
 The compute capabilities for GPUs on Tegra and non-Tegra devices are mutually exclusive, and
 device-code compiled for Tegra and non-Tegra devices are not interchangeable, so one build
 cannot service all ARM variants. For developer convenience, the CUDA compiler package
-activation script automatically sets the environment variables `CUDAARCHS` and
-`TORCH_CUDA_ARCH_LIST` to all supported CUDA architectures for the target platform. These
-environment variables are consumed by CMake and PyTorch respectively.
+activation script for `cuda-nvcc >=12.8` automatically sets the environment variables
+`CUDAARCHS` and `TORCH_CUDA_ARCH_LIST` to all supported CUDA architectures for the target
+platform. These environment variables are consumed by CMake and PyTorch respectively.
 
 ## Directory structure
 
