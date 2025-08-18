@@ -16,7 +16,8 @@ Of particular interest from a conda packaging perspective is the binary backward
 This guide assumes that you already know how to write and compile code that supports such behavior.
 If your library is properly configured as such, you will need to do a bit of extra work to ensure that your conda package supports this as well:
 
-- You must [ignore the `run_exports`](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#export-runtime-requirements) of any CUDA packages that your package depends on. Otherwise, the `run_exports` would require the runtime libraries to have versions equal to or greater than the versions used to build the package.
+- You must [ignore_run_exports_from`](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#export-runtime-requirements) of any CUDA library packages that your package depends on. Otherwise, the `run_exports` would require the runtime libraries to have versions equal to or greater than the versions used to build the package.
+- You must `ignore_run_exports` of the `cuda-version` package.
 - You must add explicit runtime dependencies (or `run_constrained` for soft/optional dependencies) that specify the desired version range for the dependencies whose `run_exports` have been ignored.
 
 As an example, consider that you have built a package that requires `libcublas`:
@@ -35,10 +36,13 @@ Because of run-exports in the `libcublas-dev` package, your library will have a 
 To make this compatible with all CUDA minor versions from the same CUDA major version family, you must add the following:
 ```yaml
 build:
-  # Ignore run exports from your build and host sections
+  # Ignore run exports from CUDA libraries in the host section
   ignore_run_exports_from:
-    - {{ compiler('cuda') }}
     - libcublas-dev
+  # Ignore cuda-version directly. Do not ignore from {{ compiler('cuda') }}
+  # because this package has other exports
+  ignore_run_exports:
+    - cuda-version
 
 requirements:
   build:
@@ -69,6 +73,53 @@ This package is split into the `cuda-nvcc` package -- which is architecture spec
 x86-64 Linux) -- and the `cuda-nvcc_${TARGET_PLATFORM}` packages -- each of which is architecture-independent and may be installed on any target, but are only suitable for use in compiling code for the specified target platform.
 This approach allows using host machines with a single platform to compile code for multiple platforms.
 
+## Building for ARM Tegra devices
+
+> [!IMPORTANT]
+> Support for Tegra builds on conda-forge is only available for CUDA 12.9 and later.
+
+The [arm-variant](https://github.com/conda-forge/arm-variant-feedstock) package allows
+end-users to select which variant of ARM packages are installed into their environment.
+However, since there are no Tegra devices available for compilation, these packages must be
+cross-compiled from x86. Recipes that wish to build for both SBSA ARM and Tegra ARM devices
+should have something like the following in their recipe:
+
+```yaml
+requirements:
+  build:
+    - {{ compiler('cuda') }}
+    - arm-variant * {{ arm_variant_type }}
+  host:
+    - arm-variant * {{ arm_variant_type }}
+```
+
+> [!NOTE]
+> The `arm-variant` package will cause overlinking warnings for itself from `conda-build`.
+> This is expected and may be safely ignored.
+
+where the `recipe/conda_build_config.yaml` contains something like:
+
+```yaml
+arm_variant_type:  # [linux and aarch64]
+  - sbsa           # [linux and aarch64]
+  - tegra          # [linux and aarch64]
+```
+
+where the `conda-forge.yml` contains something like:
+
+```yaml
+build_platform:
+  linux_aarch64: linux_64
+provider:
+  linux_aarch64: default
+```
+
+The compute capabilities for GPUs on Tegra and non-Tegra devices are mutually exclusive, and
+device-code compiled for Tegra and non-Tegra devices are not interchangeable, so one build
+cannot service all ARM variants. For developer convenience, the CUDA compiler package
+activation script for `cuda-nvcc >=12.8` automatically sets the environment variables
+`CUDAARCHS` and `TORCH_CUDA_ARCH_LIST` to all supported CUDA architectures for the target
+platform. These environment variables are consumed by CMake and PyTorch respectively.
 
 ## Directory structure
 
