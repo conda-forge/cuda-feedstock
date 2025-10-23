@@ -16,7 +16,7 @@ Of particular interest from a conda packaging perspective is the binary backward
 This guide assumes that you already know how to write and compile code that supports such behavior.
 If your library is properly configured as such, you will need to do a bit of extra work to ensure that your conda package supports this as well:
 
-- You must [ignore_run_exports_from`](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#export-runtime-requirements) of any CUDA library packages that your package depends on. Otherwise, the `run_exports` would require the runtime libraries to have versions equal to or greater than the versions used to build the package.
+- You must define [`ignore_run_exports_from`](https://docs.conda.io/projects/conda-build/en/latest/resources/define-metadata.html#export-runtime-requirements) for any CUDA library `-dev` packages that your package depends on. Otherwise, the `run_exports` would require the runtime libraries to have versions equal to or greater than the versions used to build the package.
 - You must `ignore_run_exports` of the `cuda-version` package.
 - You must add explicit runtime dependencies (or `run_constrained` for soft/optional dependencies) that specify the desired version range for the dependencies whose `run_exports` have been ignored.
 
@@ -88,9 +88,7 @@ should have something like the following in their recipe:
 requirements:
   build:
     - {{ compiler('cuda') }}
-    - arm-variant * {{ arm_variant_type }}
-  host:
-    - arm-variant * {{ arm_variant_type }}
+    - arm-variant * {{ arm_variant_type }}  # [linux and aarch64]
 ```
 
 > [!NOTE]
@@ -117,9 +115,10 @@ provider:
 The compute capabilities for GPUs on Tegra and non-Tegra devices are mutually exclusive, and
 device-code compiled for Tegra and non-Tegra devices are not interchangeable, so one build
 cannot service all ARM variants. For developer convenience, the CUDA compiler package
-activation script for `cuda-nvcc >=12.8` automatically sets the environment variables
-`CUDAARCHS` and `TORCH_CUDA_ARCH_LIST` to all supported CUDA architectures for the target
-platform. These environment variables are consumed by CMake and PyTorch respectively.
+activation script for `cuda-nvcc >=12.8` automatically sets the environment variable
+`CUDAARCHS` to all supported CUDA architectures for the target platform when `CONDA_BUILD` is
+detected and when `CUDAARCHS` is not already set. This environment variable is a standard CMake
+environment variable.
 
 ## Directory structure
 
