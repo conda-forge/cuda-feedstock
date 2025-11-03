@@ -46,9 +46,15 @@ _Warning: there are contents of OS CUDA Toolkit installs that are not available 
 
 ### Selecting ARM Variant
 
-Many of NVIDIA's CUDA package are built for both SBSA and Tegra devices. SBSA is the default
-ARM variant. To install packages built for Tegra, add the `arm-variant=*=tegra` package to
-your environment.
+Many of NVIDIA's CUDA packages are built for both SBSA and Tegra devices. For CUDA 12.9 and
+earlier, Tegra devices are a separate ARM variant. To install packages built for CUDA 12.9
+Tegra, add the `arm-variant=*=tegra` package to your environment. For CUDA 13.0 and later,
+the arm-variant package is no longer required. Tegra devices are no longer a separate
+architecture from SBSA.
+
+> [!IMPORTANT]
+> Support for Tegra builds on conda-forge is only available for CUDA 12.9 and later.
+> This means that only Orin (sm_87) and later devices are supported.
 
 ### Installing Subsets of the CUDA Toolkit
 

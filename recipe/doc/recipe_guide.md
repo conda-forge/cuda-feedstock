@@ -77,6 +77,7 @@ This approach allows using host machines with a single platform to compile code 
 
 > [!IMPORTANT]
 > Support for Tegra builds on conda-forge is only available for CUDA 12.9 and later.
+> This means that only Orin (sm_87) and later devices are supported.
 
 The [arm-variant](https://github.com/conda-forge/arm-variant-feedstock) package allows
 end-users to select which variant of ARM packages are installed into their environment.
@@ -85,6 +86,9 @@ cross-compiled from x86. Recipes that wish to build for both SBSA ARM and Tegra 
 should have something like the following in their recipe:
 
 ```yaml
+build:
+  skip: true  # [arm_variant_type == "tegra" and cuda_compiler_version != "12.9"]
+
 requirements:
   build:
     - {{ compiler('cuda') }}
@@ -94,6 +98,10 @@ requirements:
 > [!NOTE]
 > The `arm-variant` package will cause overlinking warnings for itself from `conda-build`.
 > This is expected and may be safely ignored.
+
+> [!NOTE]
+> The `arm-variant` is only required for CUDA 12.9. Starting with CUDA 13.0 and Jetpack 7,
+> Tegra devices are compatible with SBSA.
 
 where the `recipe/conda_build_config.yaml` contains something like:
 
@@ -112,13 +120,13 @@ provider:
   linux_aarch64: default
 ```
 
-The compute capabilities for GPUs on Tegra and non-Tegra devices are mutually exclusive, and
-device-code compiled for Tegra and non-Tegra devices are not interchangeable, so one build
-cannot service all ARM variants. For developer convenience, the CUDA compiler package
-activation script for `cuda-nvcc >=12.8` automatically sets the environment variable
-`CUDAARCHS` to all supported CUDA architectures for the target platform when `CONDA_BUILD` is
-detected and when `CUDAARCHS` is not already set. This environment variable is a standard CMake
-environment variable.
+The compute capabilities for GPUs on Tegra and non-Tegra devices are mutually exclusive for
+CUDA 12, and device-code compiled for Tegra and non-Tegra devices are not interchangeable,
+so one build cannot service all ARM variants. For developer convenience, the CUDA compiler
+package activation script for `cuda-nvcc >=12.8` automatically sets the environment variable
+`CUDAARCHS` to all supported CUDA architectures for the target platform when `CONDA_BUILD`
+is detected and when `CUDAARCHS` is not already set. This environment variable is a standard
+CMake environment variable.
 
 ## Directory structure
 
