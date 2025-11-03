@@ -100,7 +100,7 @@ requirements:
 > This is expected and may be safely ignored.
 
 > [!NOTE]
-> The `arm-variant` is only required for CUDA 12.9. Starting with CUDA 13.0 and Jetpack 7,
+> The `arm-variant` package is only required for CUDA 12.9. Starting with CUDA 13.0 and Jetpack 7,
 > Tegra devices are compatible with SBSA.
 
 where the `recipe/conda_build_config.yaml` contains something like:
