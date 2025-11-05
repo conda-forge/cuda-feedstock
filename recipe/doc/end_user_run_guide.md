@@ -72,7 +72,8 @@ For convenience, a number of additional metapackages are available:
 
 CCCL is a special case among CUDA packages.
 Due to 1) being header-only, 2) fast-moving, and 3) independently-evolving, consumers may want a different (newer) version of CCCL than the one corresponding to their CTK version.
-Instructions on how to install a suitable CCCL package from conda can be found [in the CCCL README](https://github.com/NVIDIA/cccl/?tab=readme-ov-file#conda). (See [this issue](https://github.com/conda-forge/cuda-cccl-impl-feedstock/issues/2) for more information on the history of these packages).
+Instructions on how to install a suitable CCCL package from conda can be found [in the CCCL README](https://github.com/NVIDIA/cccl/?tab=readme-ov-file#conda).
+See [this issue](https://github.com/conda-forge/cuda-cccl-impl-feedstock/issues/2) for more information on the history of these packages.
 
 ## `conda-forge` vs `nvidia` channel
 
