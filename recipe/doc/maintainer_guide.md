@@ -20,10 +20,10 @@ As discussed in the [runtime guide](./doc/end_user_run_guide.md), CCCL is a spec
 ### Packages to install
 
 CCCL packaging is split into two primary feedstocks:
-- The [cuda-cccl](https://github.com/conda-forge/cuda-cccl-feedstock) provides the version of CCCL associated with a given CUDA Toolkit (CTK) version.
-- The [cccl](https://github.com/conda-forge/cccl-feedstock) provides the latest version of CCCL independent of CTK version.
+- The [cuda-cccl feedstock](https://github.com/conda-forge/cuda-cccl-feedstock) provides the version of CCCL associated with a given CUDA Toolkit (CTK) version.
+- The [cccl feedstock](https://github.com/conda-forge/cccl-feedstock) provides the latest version of CCCL independent of CTK version.
 
-The `cccl` package installs headers directly into `${PREFIX]/include`.
+The `cccl` package installs headers directly into `${PREFIX}/include`.
 The [cuda-cccl recipe](https://github.com/conda-forge/cuda-cccl-feedstock/blame/main/recipe/meta.yaml) is actually a split recipe that produces multiple packages:
 - `cuda-cccl_{{target}}`: As discussed in [the recipe guide](./doc/recipe_guide.md), to support cross-compilation these CCCL headers are split into target-specific packages in the `${PREFIX}/targets` directories on Linux. These packages are used as dependencies by other CTK packages like `cuda-nvcc` and `cuda-cudart` to indicate a dependency that also presumes that the nvcc compiler will know to search inside this `targets`-based layout. These files also do not install any headers into the `${PREFIX}/include` directory. These files should never be used directly by end-users.
 - `cuda-cccl`: This is the user-facing package mentioned above that provides the version of CCCL associated with a given CTK version. It is actually nothing more than a metapackage that brings in corresponding versions of `cccl` and `cuda-cccl_{{target}}` as dependencies to ensure consistent versioning.
@@ -52,7 +52,7 @@ To resolve this problem, in CUDA 13 the CTK layout was modified to place CCCL he
 This change made it possible for users to override CTK-installed CCCL headers with a different version in another directory.
 Most of the discussion here is thus largely for CUDA>=13 since multiple separate CCCL installations simply cannot be supported in CUDA<=12.
 
-In normal system installations of CUDA (e.g. via deb or RPM), the contents of `${PREFIX]/include` and `${PREFIX}/targets/${target}/include` are identical.
+In normal system installations of CUDA (e.g. via deb or RPM), the contents of `${PREFIX}/include` and `${PREFIX}/targets/${target}/include` are identical.
 However, this separation exists precisely so that cross-compilation scenarios like conda's may be supported.
 The conda-forge CUDA packages take advantage of this by not installing CCCL headers into `${PREFIX}/include` at all, but by [patching `nvcc.profile` to move all of its searches into the target-specific directory](https://github.com/conda-forge/cuda-nvcc-impl-feedstock/blob/main/recipe/nvcc.profile.patch).
 Ultimately, this means that the CCCL headers provided by the CTK in `${PREFIX}/targets/${target}/include` are included as `-isystem` from the targets directory by `nvcc` automatically, even though the `${PREFIX}/include` directory is included as `-I`.
@@ -60,5 +60,5 @@ Since the `cccl` package installs headers directly into `${PREFIX}/include`, the
 Therefore, if a user installs the `cccl` package alongside parts of the CTK that install one of the `cuda-cccl_{{target}}` packages, the user-installed CCCL will be used during compilation instead of the CTK-installed CCCL.
 
 All of the above discussion regarding supporting dual CCCL installations applies to all platforms.
-Note that on Windows since cross-compilation is not supported there the targets directory is not generally used by most CTK packages.
-However, the CCCL do use it so that this dual installation mechanism still works properly.
+Note that on Windows cross-compilation is not supported, so the targets directory is generally not used by most CTK packages.
+However, the CCCL packages do use the targets directory layout so that this dual installation mechanism still works properly.
