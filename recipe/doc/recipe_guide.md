@@ -66,7 +66,7 @@ For packages that need to support CUDA major versions earlier than CUDA 12, you 
 
 ## Cross-compilation
 
-The CUDA recipes are designed to support cross-compilation.
+The CUDA recipes are designed to support cross-compilation on Linux.
 As such, a number of CUDA components on `conda-forge` are split into `noarch: generic` component packages that are named according to the supported architecture, rather than being architecture-specific packages.
 The canonical example is [the cuda-nvcc package](https://github.com/conda-forge/cuda-nvcc-feedstock/blob/main/recipe/meta.yaml) that contains the CUDA `nvcc` compiler.
 This package is split into the `cuda-nvcc` package -- which is architecture specific and must be installed on the appropriate target platform (e.g.
@@ -134,7 +134,7 @@ CMake environment variable.
 
 The `conda-forge` CUDA packages aim to satisfy two sets of constraints.
 On one hand, the packages aim to retain as similar a structure as possible to the CUDA packages that may be installed via system package manager (e.g. `apt` and `yum`) while supporting cross-compilation.
-On the other hand, the packages aim to provide a seamless experience at both build time and run time within conda environments.
+On the other hand, the packages aim to provide a seamless experience at both build time and run time within conda environments, and the need for cross-compilation support introduces some special considerations that are not present on other non-Linux platforms.
 To satisfy the first requirement, all files in CUDA conda packages are installed into the `$PREFIX/targets` directory.
 This includes libraries, headers, and packaging files, along with other miscellaneous files that may be present in any given package.
 To satisfy the second requirement, we symlink a number of these files into standard sysroot locations so that they can be found by standard tooling (e.g.
