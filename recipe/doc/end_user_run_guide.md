@@ -46,8 +46,7 @@ _Warning: there are contents of OS CUDA Toolkit installs that are not available 
 
 ### Selecting ARM Variant
 
-Many of NVIDIA's CUDA packages are built for both SBSA and Tegra devices. For CUDA 12.9 and
-earlier, Tegra devices are a separate ARM variant. To install packages built for CUDA 12.9
+Many of NVIDIA's CUDA packages are built for both SBSA and Tegra devices. For CUDA 12.9, Tegra devices are a separate ARM variant. To install packages built for CUDA 12.9
 Tegra, add the `arm-variant=*=tegra` package to your environment. For CUDA 13.0 and later,
 the arm-variant package is no longer required. Tegra devices are no longer a separate
 architecture from SBSA.
@@ -84,7 +83,8 @@ For convenience, a number of additional metapackages are available:
 
 CCCL is a special case among CUDA packages.
 Due to 1) being header-only, 2) fast-moving, and 3) independently-evolving, consumers may want a different (newer) version of CCCL than the one corresponding to their CTK version.
-Instructions on how to install a suitable CCCL package from conda can be found [in the CCCL README](https://github.com/NVIDIA/cccl/?tab=readme-ov-file#conda). (See [this issue](https://github.com/conda-forge/cuda-cccl-impl-feedstock/issues/2) for more information on the history of these packages).
+Instructions on how to install a suitable CCCL package from conda can be found [in the CCCL README](https://github.com/NVIDIA/cccl/?tab=readme-ov-file#conda).
+See [this issue](https://github.com/conda-forge/cuda-cccl-impl-feedstock/issues/2) for more information on the history of these packages.
 
 ## `conda-forge` vs `nvidia` channel
 
