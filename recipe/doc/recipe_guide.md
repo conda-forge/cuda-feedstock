@@ -119,8 +119,6 @@ should make the following changes to their feedstock:
     ```yaml
     build_platform:
       linux_aarch64: linux_64
-    provider:
-      linux_aarch64: default
     ```
 
 The compute capabilities for GPUs on Tegra and non-Tegra devices are mutually exclusive for
