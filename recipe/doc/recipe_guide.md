@@ -100,13 +100,13 @@ should make the following changes to their feedstock:
         - arm-variant * {{ arm_variant_type }}  # [linux and aarch64 and cuda_compiler_version != "None"]
     ```
 
-    > [!NOTE]
-    > The `arm-variant` package will cause overlinking warnings for itself from `conda-build`.
-    > This is expected and may be safely ignored.
-
-    > [!NOTE]
-    > The `arm-variant` package is only required for CUDA 12.9. Starting with CUDA 13.0 and Jetpack 7,
-    > Tegra devices are compatible with SBSA.
+  > [!NOTE]
+  > The `arm-variant` package will cause overlinking warnings for itself from `conda-build`.
+  > This is expected and may be safely ignored.
+  
+  > [!NOTE]
+  > The `arm-variant` package is only required for CUDA 12.9. Starting with CUDA 13.0 and Jetpack 7,
+  > Tegra devices are compatible with SBSA.
 
 2. The `arm_variant_type.yaml` migrator should be added to the `.ci_support/migrations` folder.
 
