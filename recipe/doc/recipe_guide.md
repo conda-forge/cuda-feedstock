@@ -83,42 +83,43 @@ The [arm-variant](https://github.com/conda-forge/arm-variant-feedstock) package 
 end-users to select which variant of ARM packages are installed into their environment.
 However, since there are no Tegra devices available for compilation, these packages must be
 cross-compiled from x86. Recipes that wish to build for both SBSA ARM and Tegra ARM devices
-should have something like the following in their recipe:
+should make the following changes to their feedstock:
 
-```yaml
-build:
-  skip: true  # [arm_variant_type == "tegra" and cuda_compiler_version != "12.9"]
+1. The `arm-variant` package should be added to the recipe's build environment(s) to constraint the cuda  compiler toolchain.
 
-requirements:
-  build:
-    - {{ compiler('cuda') }}
-    - arm-variant * {{ arm_variant_type }}  # [linux and aarch64]
-```
+    For example:
 
-> [!NOTE]
-> The `arm-variant` package will cause overlinking warnings for itself from `conda-build`.
-> This is expected and may be safely ignored.
+    ```yaml
 
-> [!NOTE]
-> The `arm-variant` package is only required for CUDA 12.9. Starting with CUDA 13.0 and Jetpack 7,
-> Tegra devices are compatible with SBSA.
+    # A fake selector may also be needed for conda-build to pick up arm_variant_type as a variant
+    # [arm_variant_type]
 
-where the `recipe/conda_build_config.yaml` contains something like:
+    requirements:
+      build:
+        - {{ compiler('cuda') }}
+        - arm-variant * {{ arm_variant_type }}  # [linux and aarch64 and cuda_compiler_version != "None"]
+    ```
 
-```yaml
-arm_variant_type:  # [linux and aarch64]
-  - sbsa           # [linux and aarch64]
-  - tegra          # [linux and aarch64]
-```
+    > [!NOTE]
+    > The `arm-variant` package will cause overlinking warnings for itself from `conda-build`.
+    > This is expected and may be safely ignored.
 
-where the `conda-forge.yml` contains something like:
+    > [!NOTE]
+    > The `arm-variant` package is only required for CUDA 12.9. Starting with CUDA 13.0 and Jetpack 7,
+    > Tegra devices are compatible with SBSA.
 
-```yaml
-build_platform:
-  linux_aarch64: linux_64
-provider:
-  linux_aarch64: default
-```
+2. The `arm_variant_type.yaml` migrator should be added to the `.ci_support/migrations` folder.
+
+    This YAML migrator may be downloaded from https://github.com/conda-forge/conda-forge-pinning-feedstock/tree/main/recipe/migrations. This migrator adds the `arm_variant_type` variable to the build matrix for CUDA 12.9 only and sets a higher `c_stdlib_version`.
+
+3. The ARM platform should be enabled for linux in `conda-forge.yml`.
+
+    For example:
+
+    ```yaml
+    build_platform:
+      linux_aarch64: linux_64
+    ```
 
 The compute capabilities for GPUs on Tegra and non-Tegra devices are mutually exclusive for
 CUDA 12, and device-code compiled for Tegra and non-Tegra devices are not interchangeable,
