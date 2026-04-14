@@ -153,6 +153,7 @@ Feedstock Maintainers
 * [@bdice](https://github.com/bdice/)
 * [@billysuh7](https://github.com/billysuh7/)
 * [@carterbox](https://github.com/carterbox/)
+* [@hanzov69](https://github.com/hanzov69/)
 * [@jakirkham](https://github.com/jakirkham/)
 * [@kmittman](https://github.com/kmittman/)
 * [@leofang](https://github.com/leofang/)
