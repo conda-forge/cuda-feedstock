@@ -8,5 +8,6 @@ noarch_platforms:
   - linux_64
   - win_64
 provider:
+  win_64: github_actions
   linux_aarch64: default
   linux_ppc64le: default
