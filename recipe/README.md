@@ -4,7 +4,7 @@ This metapackage corresponds to installing all packages in a CUDA release.
 It is suitable for use by both developers aiming to build CUDA applications and end-users running CUDA.
 More information for different classes of users is documented in the documents below:
 
-- [Guide for End-Users Running CUDA Code](./doc/end_user_run_guide.md)
+- [Guide for End-Users Running CUDA Code (moved to conda-forge page)](https://conda-forge.org/docs/maintainer/knowledge_base/#cuda-for-end-users)
 - [Guide for End-Users Compiling CUDA Code](./doc/end_user_compile_guide.md)
 - [Guide for Maintainers of Recipes That Use CUDA](./doc/recipe_guide.md)
 - [Guide for Maintainers of CUDA recipes](./doc/maintainer_guide.md)
